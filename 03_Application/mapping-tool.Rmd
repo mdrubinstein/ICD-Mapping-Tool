@@ -1,0 +1,175 @@
+---
+title: "ICD-9 to ICD-10 Mapping Tool (2016)"
+resource_files:
+- cm_mapping_2016.RDS
+- pcs_mapping_2016.RDS
+output:
+  html_document:
+    theme: sandstone
+runtime: shiny
+---
+
+### Background and Instructions
+
+This tool allows you to search for 2016 ICD-9 to ICD-10 diagnosis and procedure code general equivalence mappings (GEMs). While several similar tools are available online, this one allows you to search multiple codes or descriptions at once and immediately see the mapping in a datatable format that can be downloaded to an Excel document.
+
+To use the tool, first select which code type you wish to examine: diagnosis or procedure codes. Second, select whether you would like to examine mappings from ICD-9 to ICD-10, ICD-10 to ICD-9, or both. Please note that the default setting lists mappings from both directions, which results in many duplicate mappings; the 'duplicate mapping' field appears in this selection to flag these mappings. Next, select how you would like to filter the list: ICD-9 code, ICD-10 code, ICD-9 description, or ICD-10 description. 
+
+You may then choose whether to enter your list of codes or keywords directly into a text field separated by commas, or uploaded as an xlsx file. Regardless of the input format, you may also select whether you want to use a partial or exact match to these codes. Partial mapping will tolerate the use of R's regular expressions, whereas exact mapping will look for only codes or descriptions that have the exact code or description used in the text input field or the csv. Please refer to to this [page](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html) for information about the syntax that R will recognize. As a general rule, exact matching may be more useful for code matching, whereas partial matching may be more useful for filtering by descriptions.
+
+Next, directly a comma separated list of corresponding ICD-9 codes, ICD-10 codes, ICD-9 descriptions, or ICD-10 descriptions into the text field, or upload your xlsx document (note that this choice depends on the selection made above). If you choose to use the text field, you may separate different values by a comma (e.g. if filtering by ICD-9 code, input '0010, 0020' to match both these codes). If you choose to use the xlsx option, please include a header in the document, populate only the first column, and enter one expression for each row that you would like to match (e.g., to filter for ICD-9 codes matching '0011' and '0020', enter each of these values on a separate line). Finally, the default setting provides a filtered crosswalk from ICD-9 to ICD-10; however, you may also choose to return a list of unique ICD-9 or ICD-10 codes and descriptions in the filtered crosswalk. You may then download the datatable locally in Excel by clicking the 'download' button.
+
+Please note: when filtering keywords or ICD-10 codes input to the text field, use only lowercase letters. You may use uppercase letters if input in the xlsx document.
+
+### Mapping Tool
+
+```{r, echo = FALSE, include = FALSE}
+library(flexdashboard)
+library(shiny)
+library(DT)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(stringr)
+
+# Server script
+data   <- reactive({
+  file <- sprintf('%s_mapping_2016.RDS', input$codetype)
+  file %>% readRDS()
+})
+
+
+filtered_data <- reactive({
+  # Define column names
+  col_names <- vector()
+    if(input$crosswalk == 'all')
+      col_names <- c('ICD-9 Code', 'ICD-9 Description', 'ICD-10 Code', 'ICD-10 Description',
+                   'Combination', 'Crosswalk Flag', 'Duplicate Map Flag')
+    if(input$crosswalk != 'all')
+      col_names <- c('ICD-9 Code', 'ICD-9 Description', 'ICD-10 Code', 'ICD-10 Description',
+                   'Combination', 'Crosswalk Flag')
+
+  # Filter by mapping
+  if(input$crosswalk == 'all')      data <- data()
+  if(input$crosswalk == 'icd9to10') data <- data() %>% 
+                                            subset(xwalk_flag == 'icd9to10') %>%
+                                            select(-matches('^dup'))
+  if(input$crosswalk == 'icd10to9') data <- data() %>% 
+                                            subset(xwalk_flag == 'icd10to9') %>%
+                                            select(-matches('^dup'))
+  
+  # Read in text or csv and apply regex logic
+  if(input$input_type == 'text') {
+    text <- input$text %>%
+            str_split(pattern = ', ') %>%
+            unlist()
+    if(input$reg_ex == 'exact') {
+      text <- sprintf('^%s$', text)
+    }
+  }
+  else if(input$input_type == 'xlsx') {
+    inFile <- input$file
+    text <- xlsx::read.xlsx(inFile$datapath, 1)[[1]] %>%
+          as.vector() %>%
+          tolower()
+    if(input$reg_ex == 'exact') {
+      text <- sprintf('^%s$', text)
+    }
+  }
+
+  # Filter by text  
+  text <- text %>% paste(collapse = '|')
+  rows <- grep(text, tolower(data[[input$filter]]))
+  sub  <- data[rows,] %>%
+          set_names(col_names)
+  
+  # Create final dataset
+  output <- if(input$output == 'xwalk') sub
+            else if(input$output == 'i9') {
+              sub %>%
+              select(matches('ICD-9')) %>%
+              distinct()
+            }
+            else if(input$output == 'i10') {
+              sub %>%
+              select(matches('ICD-10')) %>%
+              distinct()
+            }
+  return(output)
+})
+```
+
+```{r, echo = FALSE}
+# UI Script
+inputPanel(
+  radioButtons('codetype', 'Please Select the Code Type',
+            choices = c('Diagnosis'  = 'cm',
+                        'Procedure'  = 'pcs')),
+  selectInput('crosswalk', 'Please select the mapping',
+            choices = c('All mappings' = 'all',
+                        'ICD 9 to 10'  = 'icd9to10',
+                        'ICD 10 to 9'  = 'icd10to9')),
+  selectInput('filter', 'Please select filter type',
+            choices = c('ICD 9 Code'         = 'icd_9',
+                        'ICD 9 Description'  = 'icd_9_descr',
+                        'ICD 10 Code'        = 'icd_10',
+                        'ICD 10 Description' = 'icd_10_descr'))
+)
+
+inputPanel(
+  selectInput('input_type', 'Please select input type',
+              c('Text Field' = 'text',
+                'XLSX File'  = 'xlsx')),
+  radioButtons('reg_ex', 'Please select matching format',
+              c('Partial Match'   = 'partial',
+                'Exact Match'     = 'exact'))
+)
+
+inputPanel(
+  conditionalPanel(condition = "input.input_type == 'text'",
+    textInput('text', 'Search! (separate multiple values by comma)')),
+  conditionalPanel(condition = "input.input_type == 'xlsx'",
+    fileInput('file', 'Choose XLSX to Upload \n (list of codes or keywords with header)')),
+  radioButtons('output', 'Please select output type',
+               choices = c('Full Crosswalk'      = 'xwalk',
+                           'Unique ICD-9 codes'  = 'i9',
+                           'Unique ICD-10 codes' = 'i10')),
+  downloadButton('download', 'Download Data')
+)
+
+output$download <- downloadHandler(
+  filename = 'data.xlsx',
+  content  = function(file) {
+    xlsx::write.xlsx(filtered_data(), file)
+  }
+)
+
+inputPanel(
+  DT::renderDataTable({ 
+    datatable(filtered_data(), 
+              filter = 'none', 
+              selection = 'multiple', 
+              escape = FALSE,
+              rownames = FALSE,
+              options = list(sDom  = '<"top">lrt<"bottom">ip'))
+    })
+)
+```
+
+### Data Dictionary
+
+**ICD-9 Code:** identifies an ICD-9 diagnosis or procedure code. 
+
+**ICD-9 Description:** full description attached to the ICD-9 diagnosis or procedure code.
+
+**ICD-10 Code:** identifies an ICD-10 diagnosis or procedure code.
+
+**ICD-10 Description:**  full description attached to the ICD-10 diagnosis or procedure code.
+
+**Combination:** identifies how the ICD-9 codes map to the ICD-10 codes. For more information about how to interpret combination codes, please refer to the documentation at the [link](http://www.ohima.org/quiz/courses6/22.1.html). 
+
+**Crosswalk flag:** identifies whether the mapping is from ICD-9 to ICD-10, or from ICD-10 to ICD-9.
+
+**Duplicate map flag:** _(only available when the mapping selection input includes 'all mappings')_ If TRUE, indicates that the specific mapping from ICD-10 to ICD-9 also exists as a mapping from ICD-9 to ICD-10.
+
+The code for this application is available at https://github.com/mdrubinstein.

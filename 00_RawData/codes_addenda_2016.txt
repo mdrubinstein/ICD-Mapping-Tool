@@ -1,0 +1,57 @@
+Add:         047K041 Dilation of Right Femoral Artery with Drug-eluting Intraluminal Device, using Drug-Coated Balloon, Open Approach
+Add:         047K0D1 Dilation of Right Femoral Artery with Intraluminal Device, using Drug-Coated Balloon, Open Approach
+Add:         047K0Z1 Dilation of Right Femoral Artery using Drug-Coated Balloon, Open Approach
+Add:         047K341 Dilation of Right Femoral Artery with Drug-eluting Intraluminal Device, using Drug-Coated Balloon, Percutaneous Approach
+Add:         047K3D1 Dilation of Right Femoral Artery with Intraluminal Device, using Drug-Coated Balloon, Percutaneous Approach
+Add:         047K3Z1 Dilation of Right Femoral Artery using Drug-Coated Balloon, Percutaneous Approach
+Add:         047K441 Dilation of Right Femoral Artery with Drug-eluting Intraluminal Device, using Drug-Coated Balloon, Percutaneous Endoscopic Approach
+Add:         047K4D1 Dilation of Right Femoral Artery with Intraluminal Device, using Drug-Coated Balloon, Percutaneous Endoscopic Approach
+Add:         047K4Z1 Dilation of Right Femoral Artery using Drug-Coated Balloon, Percutaneous Endoscopic Approach
+Add:         047L041 Dilation of Left Femoral Artery with Drug-eluting Intraluminal Device, using Drug-Coated Balloon, Open Approach
+Add:         047L0D1 Dilation of Left Femoral Artery with Intraluminal Device, using Drug-Coated Balloon, Open Approach
+Add:         047L0Z1 Dilation of Left Femoral Artery using Drug-Coated Balloon, Open Approach
+Add:         047L341 Dilation of Left Femoral Artery with Drug-eluting Intraluminal Device, using Drug-Coated Balloon, Percutaneous Approach
+Add:         047L3D1 Dilation of Left Femoral Artery with Intraluminal Device, using Drug-Coated Balloon, Percutaneous Approach
+Add:         047L3Z1 Dilation of Left Femoral Artery using Drug-Coated Balloon, Percutaneous Approach
+Add:         047L441 Dilation of Left Femoral Artery with Drug-eluting Intraluminal Device, using Drug-Coated Balloon, Percutaneous Endoscopic Approach
+Add:         047L4D1 Dilation of Left Femoral Artery with Intraluminal Device, using Drug-Coated Balloon, Percutaneous Endoscopic Approach
+Add:         047L4Z1 Dilation of Left Femoral Artery using Drug-Coated Balloon, Percutaneous Endoscopic Approach
+Add:         047M041 Dilation of Right Popliteal Artery with Drug-eluting Intraluminal Device, using Drug-Coated Balloon, Open Approach
+Add:         047M0D1 Dilation of Right Popliteal Artery with Intraluminal Device, using Drug-Coated Balloon, Open Approach
+Add:         047M0Z1 Dilation of Right Popliteal Artery using Drug-Coated Balloon, Open Approach
+Add:         047M341 Dilation of Right Popliteal Artery with Drug-eluting Intraluminal Device, using Drug-Coated Balloon, Percutaneous Approach
+Add:         047M3D1 Dilation of Right Popliteal Artery with Intraluminal Device, using Drug-Coated Balloon, Percutaneous Approach
+Add:         047M3Z1 Dilation of Right Popliteal Artery using Drug-Coated Balloon, Percutaneous Approach
+Add:         047M441 Dilation of Right Popliteal Artery with Drug-eluting Intraluminal Device, using Drug-Coated Balloon, Percutaneous Endoscopic Approach
+Add:         047M4D1 Dilation of Right Popliteal Artery with Intraluminal Device, using Drug-Coated Balloon, Percutaneous Endoscopic Approach
+Add:         047M4Z1 Dilation of Right Popliteal Artery using Drug-Coated Balloon, Percutaneous Endoscopic Approach
+Add:         047N041 Dilation of Left Popliteal Artery with Drug-eluting Intraluminal Device, using Drug-Coated Balloon, Open Approach
+Add:         047N0D1 Dilation of Left Popliteal Artery with Intraluminal Device, using Drug-Coated Balloon, Open Approach
+Add:         047N0Z1 Dilation of Left Popliteal Artery using Drug-Coated Balloon, Open Approach
+Add:         047N341 Dilation of Left Popliteal Artery with Drug-eluting Intraluminal Device, using Drug-Coated Balloon, Percutaneous Approach
+Add:         047N3D1 Dilation of Left Popliteal Artery with Intraluminal Device, using Drug-Coated Balloon, Percutaneous Approach
+Add:         047N3Z1 Dilation of Left Popliteal Artery using Drug-Coated Balloon, Percutaneous Approach
+Add:         047N441 Dilation of Left Popliteal Artery with Drug-eluting Intraluminal Device, using Drug-Coated Balloon, Percutaneous Endoscopic Approach
+Add:         047N4D1 Dilation of Left Popliteal Artery with Intraluminal Device, using Drug-Coated Balloon, Percutaneous Endoscopic Approach
+Add:         047N4Z1 Dilation of Left Popliteal Artery using Drug-Coated Balloon, Percutaneous Endoscopic Approach
+Add:         X2C0361 Extirpation of Matter from Coronary Artery, One Site using Orbital Atherectomy Technology, Percutaneous Approach, New Technology Group 1
+Add:         X2C1361 Extirpation of Matter from Coronary Artery, Two Sites using Orbital Atherectomy Technology, Percutaneous Approach, New Technology Group 1
+Add:         X2C2361 Extirpation of Matter from Coronary Artery, Three Sites using Orbital Atherectomy Technology, Percutaneous Approach, New Technology Group 1
+Add:         X2C3361 Extirpation of Matter from Coronary Artery, Four or More Sites using Orbital Atherectomy Technology, Percutaneous Approach, New Technology Group 1
+Add:         XR2G021 Monitoring of Right Knee Joint using Intraoperative Knee Replacement Sensor, Open Approach, New Technology Group 1
+Add:         XR2H021 Monitoring of Left Knee Joint using Intraoperative Knee Replacement Sensor, Open Approach, New Technology Group 1
+Add:         XW03321 Introduction of Ceftazidime-Avibactam Anti-infective into Peripheral Vein, Percutaneous Approach, New Technology Group 1
+Add:         XW03331 Introduction of Idarucizumab, Dabigatran Reversal Agent into Peripheral Vein, Percutaneous Approach, New Technology Group 1
+Add:         XW03341 Introduction of Isavuconazole Anti-infective into Peripheral Vein, Percutaneous Approach, New Technology Group 1
+Add:         XW03351 Introduction of Blinatumomab Antineoplastic Immunotherapy into Peripheral Vein, Percutaneous Approach, New Technology Group 1
+Add:         XW04321 Introduction of Ceftazidime-Avibactam Anti-infective into Central Vein, Percutaneous Approach, New Technology Group 1
+Add:         XW04331 Introduction of Idarucizumab, Dabigatran Reversal Agent into Central Vein, Percutaneous Approach, New Technology Group 1
+Add:         XW04341 Introduction of Isavuconazole Anti-infective into Central Vein, Percutaneous Approach, New Technology Group 1
+Add:         XW04351 Introduction of Blinatumomab Antineoplastic Immunotherapy into Central Vein, Percutaneous Approach, New Technology Group 1
+
+Codes
+  71924 codes in icd10pcs_codes_2015.txt
+  71974 codes in icd10pcs_codes_2016.txt
+     50 additions
+      0 deletions
+      0 revisions
