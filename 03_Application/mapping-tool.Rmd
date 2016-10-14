@@ -22,8 +22,8 @@ Next, directly a comma separated list of corresponding ICD-9 codes, ICD-10 codes
 Please note: when filtering keywords or ICD-10 codes input to the text field, use only lowercase letters. You may use uppercase letters if input in the xlsx document.
 
 ### Mapping Tool
-
 ```{r, echo = FALSE, include = FALSE}
+# Load libraries
 library(flexdashboard)
 library(shiny)
 library(DT)
@@ -31,7 +31,67 @@ library(dplyr)
 library(tidyr)
 library(purrr)
 library(stringr)
+```
 
+```{r, echo = FALSE}
+# UI Script
+
+inputPanel(
+  radioButtons('codetype', 'Please Select the Code Type',
+            choices = c('Diagnosis'  = 'cm',
+                        'Procedure'  = 'pcs')),
+  selectInput('crosswalk', 'Please select the mapping',
+            choices = c('All mappings' = 'all',
+                        'ICD 9 to 10'  = 'icd9to10',
+                        'ICD 10 to 9'  = 'icd10to9')),
+  selectInput('filter', 'Please select filter type',
+            choices = c('ICD 9 Code'         = 'icd_9',
+                        'ICD 9 Description'  = 'icd_9_descr',
+                        'ICD 10 Code'        = 'icd_10',
+                        'ICD 10 Description' = 'icd_10_descr'))
+)
+
+inputPanel(
+  selectInput('input_type', 'Please select input type',
+              c('Text Field' = 'text',
+                'XLSX File'  = 'xlsx')),
+  radioButtons('reg_ex', 'Please select matching format',
+              c('Partial Match'   = 'partial',
+                'Exact Match'     = 'exact'))
+)
+
+inputPanel(
+  conditionalPanel(condition = "input.input_type == 'text'",
+    textInput('text', 'Search! (separate multiple values by comma)')),
+  conditionalPanel(condition = "input.input_type == 'xlsx'",
+    fileInput('file', 'Choose XLSX to Upload \n (list of codes or keywords with header)')),
+  radioButtons('output', 'Please select output type',
+               choices = c('Full Crosswalk'      = 'xwalk',
+                           'Unique ICD-9 codes'  = 'i9',
+                           'Unique ICD-10 codes' = 'i10')),
+  downloadButton('download', 'Download Data')
+)
+
+output$download <- downloadHandler(
+  filename = 'data.xlsx',
+  content  = function(file) {
+    xlsx::write.xlsx(filtered_data(), file)
+  }
+)
+
+inputPanel(
+  DT::renderDataTable({ 
+    datatable(filtered_data(), 
+              filter = 'none', 
+              selection = 'multiple', 
+              escape = FALSE,
+              rownames = FALSE,
+              options = list(sDom  = '<"top">lrt<"bottom">ip'))
+    })
+)
+```
+
+```{r, echo = FALSE, include = FALSE}
 # Server script
 data   <- reactive({
   file <- sprintf('%s_mapping_2016.RDS', input$codetype)
@@ -97,63 +157,6 @@ filtered_data <- reactive({
             }
   return(output)
 })
-```
-
-```{r, echo = FALSE}
-# UI Script
-inputPanel(
-  radioButtons('codetype', 'Please Select the Code Type',
-            choices = c('Diagnosis'  = 'cm',
-                        'Procedure'  = 'pcs')),
-  selectInput('crosswalk', 'Please select the mapping',
-            choices = c('All mappings' = 'all',
-                        'ICD 9 to 10'  = 'icd9to10',
-                        'ICD 10 to 9'  = 'icd10to9')),
-  selectInput('filter', 'Please select filter type',
-            choices = c('ICD 9 Code'         = 'icd_9',
-                        'ICD 9 Description'  = 'icd_9_descr',
-                        'ICD 10 Code'        = 'icd_10',
-                        'ICD 10 Description' = 'icd_10_descr'))
-)
-
-inputPanel(
-  selectInput('input_type', 'Please select input type',
-              c('Text Field' = 'text',
-                'XLSX File'  = 'xlsx')),
-  radioButtons('reg_ex', 'Please select matching format',
-              c('Partial Match'   = 'partial',
-                'Exact Match'     = 'exact'))
-)
-
-inputPanel(
-  conditionalPanel(condition = "input.input_type == 'text'",
-    textInput('text', 'Search! (separate multiple values by comma)')),
-  conditionalPanel(condition = "input.input_type == 'xlsx'",
-    fileInput('file', 'Choose XLSX to Upload \n (list of codes or keywords with header)')),
-  radioButtons('output', 'Please select output type',
-               choices = c('Full Crosswalk'      = 'xwalk',
-                           'Unique ICD-9 codes'  = 'i9',
-                           'Unique ICD-10 codes' = 'i10')),
-  downloadButton('download', 'Download Data')
-)
-
-output$download <- downloadHandler(
-  filename = 'data.xlsx',
-  content  = function(file) {
-    xlsx::write.xlsx(filtered_data(), file)
-  }
-)
-
-inputPanel(
-  DT::renderDataTable({ 
-    datatable(filtered_data(), 
-              filter = 'none', 
-              selection = 'multiple', 
-              escape = FALSE,
-              rownames = FALSE,
-              options = list(sDom  = '<"top">lrt<"bottom">ip'))
-    })
-)
 ```
 
 ### Data Dictionary
