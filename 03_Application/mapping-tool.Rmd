@@ -15,11 +15,9 @@ This tool allows you to search for 2016 ICD-9 to ICD-10 diagnosis and procedure 
 
 To use the tool, first select which code type you wish to examine: diagnosis or procedure codes. Second, select whether you would like to examine mappings from ICD-9 to ICD-10, ICD-10 to ICD-9, or both. Please note that the default setting lists mappings from both directions, which results in many duplicate mappings; the 'duplicate mapping' field appears in this selection to flag these mappings. Next, select how you would like to filter the list: ICD-9 code, ICD-10 code, ICD-9 description, or ICD-10 description. 
 
-You may then choose whether to enter your list of codes or keywords directly into a text field separated by commas, or uploaded as an xlsx file. Regardless of the input format, you may also select whether you want to use a partial or exact match to these codes. Partial mapping will tolerate the use of R's regular expressions, whereas exact mapping will look for only codes or descriptions that have the exact code or description used in the text input field or the csv. Please refer to to this [page](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html) for information about the syntax that R will recognize. As a general rule, exact matching may be more useful for code matching, whereas partial matching may be more useful for filtering by descriptions.
+You may then choose whether to enter your list of codes or keywords directly into a text field separated by commas, or uploaded as an xlsx file. Regardless of the input format, you may also select whether you want to use a partial or exact match to these codes. Partial mapping will match all codes or descriptions with the code or phrase included, while exact matches searches for codes or words that begin and end as specified. You may also use regular expressions for string matching using R's syntax. Please refer to to this [page](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html) for information about the syntax that R will recognize. As a general rule, exact matching may be more useful for code matching, whereas partial matching may be more useful for filtering by descriptions.
 
 Next, directly a comma separated list of corresponding ICD-9 codes, ICD-10 codes, ICD-9 descriptions, or ICD-10 descriptions into the text field, or upload your xlsx document (note that this choice depends on the selection made above). If you choose to use the text field, you may separate different values by a comma (e.g. if filtering by ICD-9 code, input '0010, 0020' to match both these codes). If you choose to use the xlsx option, please include a header in the document, populate only the first column, and enter one expression for each row that you would like to match (e.g., to filter for ICD-9 codes matching '0011' and '0020', enter each of these values on a separate line). Finally, the default setting provides a filtered crosswalk from ICD-9 to ICD-10; however, you may also choose to return a list of unique ICD-9 or ICD-10 codes and descriptions in the filtered crosswalk. You may then download the datatable locally in Excel by clicking the 'download' button.
-
-Please note: when filtering keywords or ICD-10 codes input to the text field, use only lowercase letters. You may use uppercase letters if input in the xlsx document.
 
 ### Mapping Tool
 ```{r, echo = FALSE, include = FALSE}
@@ -121,22 +119,19 @@ filtered_data <- reactive({
   # Read in text or csv and apply regex logic
   if(input$input_type == 'text') {
     text <- input$text %>%
+            tolower() %>%
             str_split(pattern = ', ') %>%
             unlist()
-    if(input$reg_ex == 'exact') {
-      text <- sprintf('^%s$', text)
-    }
-  }
+   }
   else if(input$input_type == 'xlsx') {
     inFile <- input$file
     text <- xlsx::read.xlsx(inFile$datapath, 1)[[1]] %>%
           as.vector() %>%
           tolower()
-    if(input$reg_ex == 'exact') {
-      text <- sprintf('^%s$', text)
-    }
   }
-
+  
+  if(input$reg_ex == 'exact') text <- sprintf('^%s$', text)
+  
   # Filter by text  
   text <- text %>% paste(collapse = '|')
   rows <- grep(text, tolower(data[[input$filter]]))
@@ -175,4 +170,4 @@ filtered_data <- reactive({
 
 **Duplicate map flag:** _(only available when the mapping selection input includes 'all mappings')_ If TRUE, indicates that the specific mapping from ICD-10 to ICD-9 also exists as a mapping from ICD-9 to ICD-10.
 
-The code for this application is available at https://github.com/mdrubinstein.
+The code for this application is available at https://github.com/mdrubinstein/ICD-Mapping-Tool.
